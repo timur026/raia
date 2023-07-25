@@ -177,6 +177,10 @@ def trim_outliers(source, destination, column_name, lower_bound, upper_bound):
     # Read the CSV file into a pandas DataFrame
     df = pd.read_csv(source)
 
+    # Calculate the 2nd and 98th percentiles of the "actual_worth" column
+    # lower_bound = df['procedure_area'].quantile(0.05)
+    # upper_bound = df['procedure_area'].quantile(0.95)
+
     # Filter the DataFrame to keep only rows with "actual_worth" values within the 2nd and 98th percentiles
     df_filtered = df[(df[column_name] >= lower_bound) & (df[column_name] <= upper_bound)]
 
