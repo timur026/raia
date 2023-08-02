@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Анализ средней цены на недвижимость</title>
+</head>
+<body>
+
+<h1>Анализ средней цены на недвижимость</h1>
+
+<form method="POST">
+    <label for="selected_trans_group">Выберите тип сделки:</label>
+    <select name="selected_trans_group" id="selected_trans_group">
+        {% for group in unique_trans_group %}
+            <option value="{{ group }}" {% if group == selected_trans_group %}selected{% endif %}>{{ group }}</option>
+        {% endfor %}
+    </select>
+    <br>
+
+    <label for="selected_property_usage">Выберите назначение недвижимости:</label>
+    <select name="selected_property_usage" id="selected_property_usage">
+        {% for usage in unique_property_usage %}
+            <option value="{{ usage }}" {% if usage == selected_property_usage %}selected{% endif %}>{{ usage }}</option>
+        {% endfor %}
+    </select>
+    <br>
+
+    <label for="selected_property_type">Выберите тип недвижимости:</label>
+        <select name="selected_property_type" id="selected_property_type">
+            {% for property_type in unique_property_type %}
+            <option value="{{ property_type }}">{{ property_type }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        
+        <label for="selected_building_name">Выберите название здания:</label>
+        <select name="selected_building_name" id="selected_building_name">
+            {% for building_name in unique_building_name %}
+            <option value="{{ building_name }}">{{ building_name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        
+        <label for="selected_rooms">Выберите количество комнат:</label>
+        <select name="selected_rooms" id="selected_rooms">
+            {% for rooms in unique_rooms %}
+            <option value="{{ rooms }}">{{ rooms }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        
+
+    <input type="submit" value="Вывести график">
+</form>
+
+{% if submitted %}
+    {% if plot_filename %}
+        <img src="{{ plot_filename }}" alt="График">
+    {% else %}
+        <p>Не удалось создать график.</p>
+    {% endif %}
+{% endif %}
+
+</body>
+</html>
