@@ -18,7 +18,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 # Specify the file path of the CSV file
-csv_file_path = r"C:\Users\Timur\Desktop\Dubai_rev2\dubai_all_residential_only_sell_2022_2023.csv"
+# csv_file_path = r"C:\Users\Timur\Desktop\Dubai_rev2\dubai_all_residential_only_sell_2022_2023.csv"
+csv_file_path = r"C:\Users\Timur\Desktop\Dubai_rev2\Transactions.csv"
 
 # Read the CSV file into a pandas DataFrame
 data = pd.read_csv(csv_file_path)
@@ -26,12 +27,16 @@ data = pd.read_csv(csv_file_path)
 print("Records in dataset:", len(data))
 
 # Separate the input features (procedure_area and categorical inputs) and the target variable (actual_worth)
-X_numerical = data[['procedure_area', 'has_parking']].values
+X_numerical = data['procedure_area'].values
+
+# Reshape 'X_numerical' to a 2D array to match the shape of 'timestamps'
+X_numerical = X_numerical.reshape(-1, 1)
 
 X_categorical = data[['property_sub_type_en', 'nearest_mall_en', 'rooms_en',
                       'reg_type_en', 'nearest_landmark_en', 'trans_group_en',
                       'procedure_name_en', 'area_name_en', 'nearest_metro_en',
-                      'master_project_en', 'project_name_en', 'building_name_en']].values
+                      'master_project_en', 'project_name_en', 'building_name_en',
+                      'has_parking']].values
 y = data['actual_worth'].values
 
 
@@ -59,7 +64,7 @@ X = np.concatenate((X_numerical_normalized, X_categorical_encoded), axis=1)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # Determine the size of hidden layers based on the total number of categories
-hidden_layer_sizes = [100, 100, 100, 100, 100, 100]
+hidden_layer_sizes = [50, 50, 100, 100, 100, 100]
 # hidden_layer_sizes = [800, 400, 200, 100, 50, 25]
 
 print("hidden layer sizes:", hidden_layer_sizes)
@@ -69,10 +74,10 @@ model = tf.keras.Sequential([
     # tf.keras.layers.SimpleRNN(hidden_layer_sizes[0], activation='relu', input_shape=(X.shape[1], 1)),
     tf.keras.layers.Dense(hidden_layer_sizes[0], activation='relu', input_shape=(X.shape[1],)),
     tf.keras.layers.Dropout(0.2),  # Apply dropout with a rate of 0.1 (10% of the neurons will be dropped)
-    tf.keras.layers.Dense(hidden_layer_sizes[1], activation='relu'),
-    tf.keras.layers.Dropout(0.2),  # Apply dropout with a rate of 0.1
-    tf.keras.layers.Dense(hidden_layer_sizes[2], activation='relu'),
-    tf.keras.layers.Dropout(0.2),  # Apply dropout with a rate of 0.1
+    # tf.keras.layers.Dense(hidden_layer_sizes[1], activation='relu'),
+    # tf.keras.layers.Dropout(0.2),  # Apply dropout with a rate of 0.1
+    # tf.keras.layers.Dense(hidden_layer_sizes[2], activation='relu'),
+    # tf.keras.layers.Dropout(0.2),  # Apply dropout with a rate of 0.1
     # tf.keras.layers.Dense(hidden_layer_sizes[3], activation='relu'),
     # tf.keras.layers.Dropout(0.1),  # Apply dropout with a rate of 0.1
     # tf.keras.layers.Dense(hidden_layer_sizes[4], activation='relu'),
@@ -119,7 +124,7 @@ print("R^2 Score: {:.2f}%".format(r2 * 100))
 print("Total Time: {}".format(total_time_str))
 
 # Save the trained model
-# model.save("dubai_ffnn.keras")
+# model.save("model_ffnn.keras")
 # print("Trained model saved.")
 
 # Play a sound signal
